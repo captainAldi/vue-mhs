@@ -4,15 +4,6 @@
       text-center
       wrap
     >
-
-				<p>
-    My name is <input v-model="coba.name">
-    and I am <input v-model="coba.age"> years old.
-  </p>
-  <p>
-    <button @click="persist">Save</button>
-  </p>
-
       <v-flex xs12>
         <v-img
           :src="require('../assets/logo.svg')"
@@ -98,11 +89,7 @@ export default {
   name: 'HelloWorld',
 
   data: () => ({
-				coba: {
-					name: '',
-					age: 0,
-				},
-				tesObject: {},
+
     ecosystem: [
       {
         text: 'vuetify-loader',
@@ -154,25 +141,5 @@ export default {
       },
     ],
   }),
-
-		mounted() {
-			if (localStorage.name) {
-					this.coba.name = localStorage.name;
-			}
-			if (localStorage.age) {
-					this.coba.age = localStorage.age;
-			}
-  },
-  methods: {
-    persist() {
-      // localStorage.name = this.coba.name;
-      // localStorage.age = this.coba.age;
-
-						localStorage.setItem('storeObj', JSON.stringify(this.coba))
-						
-
-      console.log(JSON.parse(localStorage.getItem('storeObj')).age);
-    }
-  }
 };
 </script>

@@ -105,6 +105,17 @@
     </template>
   </v-data-table>
 
+		<!-- tombol logout -->
+		<section>
+			<v-btn
+				@click="logout()"
+				color="error"
+			>
+				Logout
+			</v-btn>
+		</section>
+
+
 		<!-- Dialog Loading -->
 		<v-dialog
       v-model="dialogLoading"
@@ -207,8 +218,26 @@ export default {
 
     methods: {
 						async fetchDataMahasiswa(){
-							const response = await Axios.get('http://localhost:8000/api/mahasiswa/')
-							this.dataMahasiswa = response.data.data
+						
+						let config = {
+							headers: {
+								Accept: 'application/json',
+								Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('storeObjUser')).token,
+							}
+						}
+
+							try {
+								const response = await Axios.get('http://localhost:8000/api/mahasiswa/', config)
+								
+								if(response.data.success == true) {
+									this.dataMahasiswa = response.data.data
+								}
+							} catch (error) {
+								this.snackbarObject.status = true
+								this.snackbarObject.color = 'error'
+								this.snackbarObject.message = error.response.data.message
+							}
+
 						},
 
       editItem (item) {
@@ -223,9 +252,16 @@ export default {
 
 								if(dialogConfirm == true) {
 
+									let config = {
+										headers: {
+											Accept: 'application/json',
+											Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('storeObjUser')).token,
+										}
+									}
+
 									try {
 										this.dialogLoading = true
-										const response = await Axios.delete('http://localhost:8000/api/mahasiswa/'+item.id)
+										const response = await Axios.delete('http://localhost:8000/api/mahasiswa/'+item.id, config)
 										
 										if(response.data.success == true) {
 											this.fetchDataMahasiswa()
@@ -252,6 +288,7 @@ export default {
       },
 
       async save () {
+							
         if (this.editedIndex > -1) {
 
 										try {
@@ -260,8 +297,15 @@ export default {
 												nim: this.editedItem.nim
 											}
 
+											let config = {
+												headers: {
+													Accept: 'application/json',
+													Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('storeObjUser')).token,
+												}
+											}
+
 											this.dialogLoading = true
-											const response = await Axios.put('http://localhost:8000/api/mahasiswa/'+this.editedItem.id, formDataMahasiswa)		
+											const response = await Axios.put('http://localhost:8000/api/mahasiswa/'+this.editedItem.id, formDataMahasiswa, config)		
 													
 											if(response.data.success == true) {
 												this.fetchDataMahasiswa()
@@ -289,8 +333,15 @@ export default {
 											nama: this.editedItem.nama,
 											nim: this.editedItem.nim
 										}
+
+										let config = {
+											headers: {
+												Accept: 'application/json',
+												Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('storeObjUser')).token,
+											}
+										}
 										this.dialogLoading = true
-										const response = await Axios.post('http://localhost:8000/api/mahasiswa/', formDataMahasiswa)
+										const response = await Axios.post('http://localhost:8000/api/mahasiswa/', formDataMahasiswa, config)
 										
 										if(response.data.success == true) {
 											this.fetchDataMahasiswa()
@@ -312,6 +363,12 @@ export default {
         }
         this.close()
       },
+
+						logout() {
+							localStorage.clear()
+
+							this.$router.push('/')
+						}
     },
 }
 </script>

@@ -29,7 +29,7 @@
 						<v-spacer></v-spacer>
 								<v-btn
 									text
-									to="/mahasiswa"
+									:to="this.$route.path == '/mahasiswa' ? '' : '/mahasiswa'"
 								>
 									<span>Mahasiwa</span>
 								</v-btn>
