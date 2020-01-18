@@ -212,11 +212,17 @@ export default {
 				this.dialogLoading = false
 				this.snackbarObject.status = true
 				this.snackbarObject.color = 'error'
-				this.snackbarObject.messages = error.response.data.message
 
-				this.alertObject.type = 'error'
-				this.alertObject.message = error.response.data.data
-				this.alertObject.status = true
+				if(!error.response) {
+					this.snackbarObject.messages = 'No Response from Server'
+				} else {
+					this.snackbarObject.messages = error.response.data.message
+					this.alertObject.message = error.response.data.data
+					this.alertObject.type = 'error'
+					this.alertObject.status = true
+				}
+
+				
 			}
 		},
 		login() {
